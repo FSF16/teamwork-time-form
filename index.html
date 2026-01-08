@@ -1,36 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Log Time - Test</title>
+  <title>Log Time</title>
 </head>
 <body>
-  <h2>Log Time for Teamwork Project (Test)</h2>
+  <h2>Log Time for Teamwork Project</h2>
+
   <form id="timeForm">
-    <input type="hidden" id="project" name="project" value="">
-    
-    <label for="date">Date:</label>
-    <input type="date" id="date" name="date" required><br><br>
-    
-    <label for="hours">Hours to log:</label>
-    <input type="number" id="hours" name="hours" min="0.1" step="0.1" required><br><br>
-    
+    <input type="hidden" id="project" name="project">
+
+    <label>Date:</label><br>
+    <input type="date" id="date" required><br><br>
+
+    <label>Hours to log:</label><br>
+    <input type="number" id="hours" min="0.1" step="0.1" required><br><br>
+
     <button type="submit">Submit</button>
   </form>
 
   <script>
-    // Get project ID from URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const projectId = urlParams.get('project');
-    document.getElementById('project').value = projectId;
+    const params = new URLSearchParams(window.location.search);
+    document.getElementById("project").value = params.get("project");
 
-    document.getElementById('timeForm').addEventListener('submit', async (e) => {
+    document.getElementById("timeForm").addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const project = document.getElementById('project').value;
-      const date = document.getElementById('date').value;
-      const hours = parseFloat(document.getElementById('hours').value);
+      const project = document.getElementById("project").value;
+      const date = document.getElementById("date").value;
+      const hours = Number(document.getElementById("hours").value);
 
-      // Calculate start and end times
       const endTime = new Date();
       const startTime = new Date(endTime.getTime() - hours * 60 * 60 * 1000);
 
@@ -42,9 +40,13 @@
         endTime: endTime.toISOString()
       };
 
-      // Test: show payload instead of sending
-      console.log(payload);
-      alert(JSON.stringify(payload, null, 2));
+      await fetch("https://hook.eu2.make.com/0q05ibp52ws4rwa4xm4nvu9utl48ki1s", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      alert("Time sent to Make.com ✅");
     });
   </script>
 </body>
